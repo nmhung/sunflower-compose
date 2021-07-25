@@ -20,15 +20,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
-import net.fitken.sunflowercompose.adapters.GardenPlantingAdapter
 import net.fitken.sunflowercompose.adapters.PLANT_LIST_PAGE_INDEX
 import net.fitken.sunflowercompose.compose.garden.GardenEmpty
+import net.fitken.sunflowercompose.compose.garden.ListGardenPlanting
 import net.fitken.sunflowercompose.databinding.FragmentGardenBinding
 import net.fitken.sunflowercompose.viewmodels.GardenPlantingListViewModel
 
@@ -53,18 +54,23 @@ class GardenFragment : Fragment() {
                             }
                         }
                     }
-                }
-        val adapter = GardenPlantingAdapter()
-        binding.gardenList.adapter = adapter
 
-        subscribeUi(adapter, binding)
+                    composeViewGardenList.setContent {
+                        MdcTheme {
+                            ListGardenPlanting(
+                                    items = viewModel.plantAndGardenPlantings.observeAsState().value
+                            )
+                        }
+                    }
+                }
+
+        subscribeUi(binding)
         return binding.root
     }
 
-    private fun subscribeUi(adapter: GardenPlantingAdapter, binding: FragmentGardenBinding) {
+    private fun subscribeUi(binding: FragmentGardenBinding) {
         viewModel.plantAndGardenPlantings.observe(viewLifecycleOwner) { result ->
             binding.hasPlantings = !result.isNullOrEmpty()
-            adapter.submitList(result)
         }
     }
 

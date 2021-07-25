@@ -30,19 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/garden_list"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view_garden_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/card_side_margin"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/card_side_margin"
-            android:clipToPadding="false"
-            app:isGone="@{!hasPlantings}"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:spanCount="@integer/grid_columns"
-            tools:listitem="@layout/list_item_garden_planting" />
-
+            app:isGone="@{!hasPlantings}" />
 
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/compose_view"
