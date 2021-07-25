@@ -1,6 +1,7 @@
 package net.fitken.sunflowercompose.compose.garden
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -15,27 +16,32 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.google.android.material.composethemeadapter.MdcTheme
+import net.fitken.sunflowercompose.HomeViewPagerFragmentDirections
 import net.fitken.sunflowercompose.R
 import net.fitken.sunflowercompose.data.PlantAndGardenPlantings
 import net.fitken.sunflowercompose.viewmodels.PlantAndGardenPlantingsViewModel
 
 @Composable
-fun ItemGardenPlanting(item: PlantAndGardenPlantings) {
+fun ItemGardenPlanting(item: PlantAndGardenPlantings, navController: NavController) {
     val viewModel = PlantAndGardenPlantingsViewModel(item)
-    Card(shape = RoundedCornerShape(0.dp,
-            dimensionResource(id = R.dimen.button_corner_radius),
-            0.dp,
-            dimensionResource(id = R.dimen.button_corner_radius)),
+    Card(
+            shape = RoundedCornerShape(0.dp,
+                    dimensionResource(id = R.dimen.button_corner_radius),
+                    0.dp,
+                    dimensionResource(id = R.dimen.button_corner_radius)),
             backgroundColor = MaterialTheme.colors.surface,
             modifier = Modifier.padding(dimensionResource(id = R.dimen.card_side_margin))) {
         Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navigateToPlant(viewModel.plantId, navController)
+                        }
         ) {
             Image(
                     painter = rememberImagePainter(
@@ -73,7 +79,6 @@ fun ItemGardenPlanting(item: PlantAndGardenPlantings) {
                     style = MaterialTheme.typography.subtitle2,
                     color = MaterialTheme.colors.primaryVariant)
 
-
             Text(
                     LocalContext
                             .current
@@ -88,10 +93,8 @@ fun ItemGardenPlanting(item: PlantAndGardenPlantings) {
     }
 }
 
-@Preview
-@Composable
-fun ItemGardenPlantingPreview() {
-    MdcTheme {
-//        ItemGardenPlanting()
-    }
+private fun navigateToPlant(plantId: String, navController: NavController) {
+    val direction = HomeViewPagerFragmentDirections
+            .actionViewPagerFragmentToPlantDetailFragment(plantId)
+    navController.navigate(direction)
 }

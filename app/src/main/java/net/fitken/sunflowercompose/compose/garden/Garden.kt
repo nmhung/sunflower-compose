@@ -13,6 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import net.fitken.sunflowercompose.R
 import net.fitken.sunflowercompose.compose.StaggeredVerticalGrid
@@ -54,22 +55,14 @@ fun GardenEmptyPreview() {
 }
 
 @Composable
-fun ListGardenPlanting(items: List<PlantAndGardenPlantings>?) {
+fun ListGardenPlanting(items: List<PlantAndGardenPlantings>, navController: NavController) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         StaggeredVerticalGrid(maxColumnWidth = 220.dp,
                 modifier = Modifier
                         .padding(dimensionResource(id = R.dimen.card_side_margin))) {
-            items?.let { list ->
-                list.forEach { item ->
-                    ItemGardenPlanting(item)
-                }
+            items.forEach { item ->
+                ItemGardenPlanting(item, navController)
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun ListGardenPlantingPreview() {
-//    ListGardenPlanting()
 }
