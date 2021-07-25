@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.MaterialTheme
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -29,13 +30,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import net.fitken.sunflowercompose.PlantDetailFragment.Callback
+import net.fitken.sunflowercompose.compose.plantdetail.PlantDetailDescription
 import net.fitken.sunflowercompose.data.Plant
 import net.fitken.sunflowercompose.databinding.FragmentPlantDetailBinding
 import net.fitken.sunflowercompose.viewmodels.PlantDetailViewModel
-import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A fragment representing a single Plant detail screen.
@@ -64,21 +67,26 @@ class PlantDetailFragment : Fragment() {
                     hideAppBarFab(fab)
                     plantDetailViewModel.addPlantToGarden()
                     Snackbar.make(root, R.string.added_plant_to_garden, Snackbar.LENGTH_LONG)
-                        .show()
+                            .show()
                 }
             }
 
-            galleryNav.setOnClickListener { navigateToGallery() }
+            composeView.setContent {
+                MdcTheme {
+                    PlantDetailDescription(plantDetailViewModel)
+                }
+            }
+//            galleryNav.setOnClickListener { navigateToGallery() }
 
             var isToolbarShown = false
 
             // scroll change listener begins at Y = 0 when image is fully collapsed
             plantDetailScrollview.setOnScrollChangeListener(
-                NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
+                    NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
 
-                    // User scrolled past image to height of toolbar and the title text is
-                    // underneath the toolbar, so the toolbar should be shown.
-                    val shouldShowToolbar = scrollY > toolbar.height
+                        // User scrolled past image to height of toolbar and the title text is
+                        // underneath the toolbar, so the toolbar should be shown.
+                        val shouldShowToolbar = scrollY > toolbar.height
 
                     // The new state of the toolbar differs from the previous state; update
                     // appbar and toolbar attributes.
