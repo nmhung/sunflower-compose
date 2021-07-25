@@ -24,11 +24,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.composethemeadapter.MdcTheme
+import dagger.hilt.android.AndroidEntryPoint
 import net.fitken.sunflowercompose.adapters.GardenPlantingAdapter
 import net.fitken.sunflowercompose.adapters.PLANT_LIST_PAGE_INDEX
+import net.fitken.sunflowercompose.compose.garden.GardenEmpty
 import net.fitken.sunflowercompose.databinding.FragmentGardenBinding
 import net.fitken.sunflowercompose.viewmodels.GardenPlantingListViewModel
-import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class GardenFragment : Fragment() {
@@ -43,12 +45,17 @@ class GardenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGardenBinding.inflate(inflater, container, false)
+                .apply {
+                    composeView.setContent {
+                        MdcTheme {
+                            GardenEmpty {
+                                navigateToPlantListPage()
+                            }
+                        }
+                    }
+                }
         val adapter = GardenPlantingAdapter()
         binding.gardenList.adapter = adapter
-
-        binding.addPlant.setOnClickListener {
-            navigateToPlantListPage()
-        }
 
         subscribeUi(adapter, binding)
         return binding.root
